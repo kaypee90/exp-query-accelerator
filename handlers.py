@@ -1,5 +1,4 @@
 import json
-from urllib.parse import parse_qs
 from http_code import HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 
@@ -29,13 +28,8 @@ async def handle_post(send, receive):
         body += message.get("body", b"")
         more_body = message.get("more_body", False)
 
-    data = parse_qs(body.decode())
-    name = data.get("name", [""])[0]
-    description = data.get("description", [""])[0]
-
     response = {
-        "name": name,
-        "description": description,
+        "data": json.loads(body)
     }
 
     await process_response(HTTP_200_OK, response, send)
