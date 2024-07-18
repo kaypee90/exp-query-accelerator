@@ -8,57 +8,21 @@
 
 #  ==============================================
 
-import json
-from urllib.parse import parse_qs
+import uvicorn
+from handlers import handle_invalid_request, handle_post
+
 
 async def app(scope, receive, send):
-    assert scope['type'] == 'http'
+    assert scope["type"] == "http"
 
-    if scope['method'] == 'GET':
-        response = {
-            'message': 'Hello, World!'
-        }
-        await send({
-            'type': 'http.response.start',
-            'status': 200,
-            'headers': [
-                (b'content-type', b'application/json'),
-            ]
-        })
-        await send({
-            'type': 'http.response.body',
-            'body': json.dumps(response).encode('utf-8'),
-        })
+    if scope["method"] == "POST":
+        await handle_post(send, receive)
 
-    elif scope['method'] == 'POST':
-        body = b''
-        more_body = True
-        while more_body:
-            message = await receive()
-            body += message.get('body', b'')
-            more_body = message.get('more_body', False)
-        
-        data = parse_qs(body.decode())
-        name = data.get('name', [''])[0]
-        description = data.get('description', [''])[0]
-        
-        response = {
-            'name': name,
-            'description': description,
-        }
+    else:
+        await handle_invalid_request(send)
 
-        await send({
-            'type': 'http.response.start',
-            'status': 200,
-            'headers': [
-                (b'content-type', b'application/json'),
-            ]
-        })
-        await send({
-            'type': 'http.response.body',
-            'body': json.dumps(response).encode('utf-8'),
-        })
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=8081, log_level="info")
+    config = uvicorn.Config("app:app", port=8081, log_level="info")
+    server = uvicorn.Server(config)
+    server.run()
