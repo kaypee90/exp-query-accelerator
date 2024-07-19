@@ -1,6 +1,6 @@
 import json
 from http_code import HTTP_200_OK, HTTP_400_BAD_REQUEST
-
+from dispatcher import dispatch
 
 async def process_response(status_code, response, send):
     await send(
@@ -28,9 +28,7 @@ async def handle_post(send, receive):
         body += message.get("body", b"")
         more_body = message.get("more_body", False)
 
-    response = {
-        "data": json.loads(body)
-    }
+    response = dispatch(body)
 
     await process_response(HTTP_200_OK, response, send)
 
