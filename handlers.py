@@ -2,6 +2,7 @@ import json
 from http_code import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from dispatcher import dispatch
 
+
 async def process_response(status_code, response, send):
     await send(
         {
@@ -18,6 +19,7 @@ async def process_response(status_code, response, send):
             "body": json.dumps(response).encode("utf-8"),
         }
     )
+
 
 async def handle_get(send):
     await process_response(HTTP_200_OK, {"status": "Healthy"}, send)
@@ -40,7 +42,7 @@ async def handle_post(send, receive):
     if error:
         await handle_invalid_request(send, error)
         return
-    
+
     response = {"data": data}
     await process_response(HTTP_200_OK, response, send)
 

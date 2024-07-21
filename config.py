@@ -1,1 +1,1 @@
-CONNECTION_STRING="test_db"
+CONNECTION_STRING = "test_db"
