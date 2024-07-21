@@ -19,6 +19,9 @@ async def process_response(status_code, response, send):
         }
     )
 
+async def handle_get(send):
+    await process_response(HTTP_200_OK, {"status": "Healthy"}, send)
+
 
 async def handle_post(send, receive):
     body = b""

@@ -12,7 +12,7 @@ Use official db async driver
 """
 
 import uvicorn
-from handlers import handle_invalid_request, handle_post
+from handlers import handle_invalid_request, handle_post, handle_get
 
 
 async def app(scope, receive, send):
@@ -20,7 +20,8 @@ async def app(scope, receive, send):
 
     if scope["method"] == "POST":
         await handle_post(send, receive)
-
+    if scope["method"] == "GET":
+        await handle_get(send)
     else:
         await handle_invalid_request(send, "Request must be a POST")
 
