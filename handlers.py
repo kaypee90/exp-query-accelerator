@@ -28,12 +28,21 @@ async def handle_post(send, receive):
         body += message.get("body", b"")
         more_body = message.get("more_body", False)
 
-    response = dispatch(body)
+    if not body:
+        await handle_invalid_request(send, "Request body cannot be empty")
+        return
 
+    error, data = await dispatch(body)
+
+    if error:
+        await handle_invalid_request(send, error)
+        return
+    
+    response = {"data": data}
     await process_response(HTTP_200_OK, response, send)
 
 
-async def handle_invalid_request(send):
-    response = {"message": "Request must be a POST"}
+async def handle_invalid_request(send, message):
+    response = {"message": message}
 
     await process_response(HTTP_400_BAD_REQUEST, response, send)

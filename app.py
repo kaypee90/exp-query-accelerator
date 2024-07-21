@@ -22,7 +22,7 @@ async def app(scope, receive, send):
         await handle_post(send, receive)
 
     else:
-        await handle_invalid_request(send)
+        await handle_invalid_request(send, "Request must be a POST")
 
 
 if __name__ == "__main__":

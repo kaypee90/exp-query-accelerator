@@ -12,9 +12,10 @@ async def dispatch(request):
     
     if not data:
         # TODO: retrieve db class type based on connection type 
+        print("INFO: Couldb't find data in cache, retrieveing from db")
         db = Sqlite(CONNECTION_STRING)
         request_payload = json.loads(request)
-        data = db.query(**request_payload)
+        data = await db.query(**request_payload)
 
     if data:
         cache_request(request, data)
