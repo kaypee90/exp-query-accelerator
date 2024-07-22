@@ -2,6 +2,9 @@ from db.base import BaseDatabaseWrapper
 import aiosqlite
 import sqlite3
 
+from utils.logging import create_logger
+logger = create_logger(__name__)
+
 
 class Sqlite(BaseDatabaseWrapper):
     def __init__(self, db_path):
@@ -10,21 +13,18 @@ class Sqlite(BaseDatabaseWrapper):
     async def query(self, **kwargs):
         """
         Query sqlite db base
+        kwargs: table, fields, filters
         """
-        # query filters
-        # table
-        # fields
         try:
             query = self._generate_query(**kwargs)
 
             async with aiosqlite.connect(self.connection_string) as db:
                 async with db.execute(query) as cursor:
                     rows = await cursor.fetchall()
-                    # TODO: return rows
                     return None, rows
         except (TypeError, sqlite3.OperationalError) as e:
             error = f"Error: {e}"
-            print(error)  # TODO: Replace with logging
+            logger.error(error)
             return error, None
 
     def _generate_query(self, table, fields=None, filters=None):

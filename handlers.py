@@ -22,10 +22,16 @@ async def process_response(status_code, response, send):
 
 
 async def handle_get(send):
+    """
+    Handler for GET requests. Specifically for health checks
+    """
     await process_response(HTTP_200_OK, {"status": "Healthy"}, send)
 
 
 async def handle_post(send, receive):
+    """
+    Handler for POST requests for fetching data
+    """
     body = b""
     more_body = True
     while more_body:
