@@ -14,7 +14,7 @@ def create_logger(module_name):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(name)s %(levelname)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"  # Customize date format as needed
+        datefmt="%Y-%m-%d %H:%M:%S",  # Customize date format as needed
     )
     log_handler = logging.StreamHandler()
     log_file_handler = logging.FileHandler("qa.log")

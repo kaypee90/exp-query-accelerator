@@ -4,6 +4,7 @@ from db.sqlite import Sqlite
 
 from utils.logging import create_logger
 from utils.config import CONNECTION_STRING
+
 logger = create_logger(__name__)
 
 
