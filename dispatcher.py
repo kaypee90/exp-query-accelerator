@@ -20,6 +20,8 @@ async def dispatch(request):
         database_type = databases[DB_TYPE]
         db = database_type(CONNECTION_STRING)
         request_payload = json.loads(request)
+        
+        # TODO: Validate request payload
         error, data = await db.query(**request_payload)
 
         if not error and data:
