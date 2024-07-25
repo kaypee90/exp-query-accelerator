@@ -4,7 +4,7 @@ In-Memory key-value pair cache
 
 REQUEST_CACHE = {}
 
-
+# TODO: Set TTL on cache with a naive implementation {"key": {"expiry":"yyyy-MM-dd", "value":"DATA"}}
 class Cache:
 
     @staticmethod
