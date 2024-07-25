@@ -11,14 +11,22 @@ def create_logger(module_name):
     Returns:
         logging.Logger: Logger object configured with a stream handler and a file handler.
     """
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(name)s %(levelname)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",  # Customize date format as needed
-    )
-    log_handler = logging.StreamHandler()
-    log_file_handler = logging.FileHandler("qa.log")
     logger = logging.getLogger(module_name)
-    logger.addHandler(log_handler)
-    logger.addHandler(log_file_handler)
+    logger.setLevel(logging.INFO)
+
+    console_handler = logging.StreamHandler()
+    file_handler = logging.FileHandler("qa.log", mode="a", encoding="utf-8")
+
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+
+    formatter = logging.Formatter(
+        "{asctime} - {name} - {levelname} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
+
     return logger

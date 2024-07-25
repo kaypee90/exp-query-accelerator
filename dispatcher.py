@@ -1,9 +1,8 @@
 import json
-from cache import cache_request, get_cached_request
-from db.sqlite import Sqlite
+from cache import Cache
 
 from utils.logging import create_logger
-from utils.config import CONNECTION_STRING
+from utils.config import DB_TYPE, CONNECTION_STRING, databases
 
 logger = create_logger(__name__)
 
@@ -11,21 +10,20 @@ logger = create_logger(__name__)
 async def dispatch(request):
     """
     Query dispatcher, checks if query response is cached
-    if not avalable query db cache query response
+    if not avalable query db and cache query response
     """
-    data = get_cached_request(request)
+    data = Cache.get(request)
+    error = None
 
     if not data:
-        # TODO: retrieve db class type based on connection type
         logger.info("Couldb't find data in cache, retrieveing from db")
-        db = Sqlite(CONNECTION_STRING)
+        database_type = databases[DB_TYPE]
+        db = database_type(CONNECTION_STRING)
         request_payload = json.loads(request)
-        data = await db.query(**request_payload)
+        error, data = await db.query(**request_payload)
 
-        if data:
+        if not error and data:
             logger.info("Caching request retrieved from db")
-            cache_request(request, data)
-        else:
-            logger.info("No data found in db")
+            Cache.set(request, data)
 
-    return data
+    return error, data

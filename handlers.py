@@ -2,6 +2,10 @@ import json
 from http_code import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from dispatcher import dispatch
 
+from utils.logging import create_logger
+
+logger = create_logger(__name__)
+
 
 async def process_response(status_code, response, send):
     await send(
@@ -23,14 +27,15 @@ async def process_response(status_code, response, send):
 
 async def handle_get(send):
     """
-    Handler for GET requests. Specifically for health checks
+    Handler for health checks
     """
+    logger.info("Health check succeeded")
     await process_response(HTTP_200_OK, {"status": "Healthy"}, send)
 
 
 async def handle_post(send, receive):
     """
-    Handler for POST requests for fetching data
+    Handler for fetching data
     """
     body = b""
     more_body = True
