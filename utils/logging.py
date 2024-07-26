@@ -5,7 +5,7 @@ def create_logger(module_name):
     """
     Initializes a new logger object.
 
-    Parameters:
+    Args:
         module_name (str): Name of the module importing the logger.
 
     Returns:

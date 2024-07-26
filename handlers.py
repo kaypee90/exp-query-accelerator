@@ -8,6 +8,9 @@ logger = create_logger(__name__)
 
 
 async def process_response(status_code, response, send):
+    """
+    Process response content for handlers
+    """
     await send(
         {
             "type": "http.response.start",
