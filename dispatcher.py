@@ -11,7 +11,7 @@ logger = create_logger(__name__)
 async def dispatch(request):
     """
     Query dispatcher, checks if query response is cached
-    if not avalable query db and cache query response
+    if not available in cache, query db and cache the response
     """
     start_time = time.time()
 
