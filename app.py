@@ -2,7 +2,7 @@
 Author kaypee90
 
 TTL
-Separate Query Cache and Item Cache
+Use single cache for` Query Cache and Item Cache
 Based on async await
 Handle concurrency
 Monitoring tool eg. Displaying Service health

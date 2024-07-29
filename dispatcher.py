@@ -19,7 +19,7 @@ async def dispatch(request):
     error = None
 
     if not data:
-        logger.info("Couldb't find data in cache, retrieveing from db")
+        logger.info("Couldn't find data in cache, retrieving from db")
         database_type = databases[DB_TYPE]
         db = database_type(CONNECTION_STRING)
         request_payload = json.loads(request)
