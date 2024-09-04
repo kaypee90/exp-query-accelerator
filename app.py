@@ -14,6 +14,7 @@ Use official db async driver
 import uvicorn
 from handlers import handle_invalid_request, handle_post, handle_get
 
+# TODO: Handle KeyboardInterrupt error
 
 async def app(scope, receive, send):
     assert scope["type"] == "http"
