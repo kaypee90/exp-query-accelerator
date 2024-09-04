@@ -2,16 +2,14 @@
 In-Memory key-value pair cache
 """
 
-TTL = 86400
-
 from datetime import datetime, timedelta
 
 
+TTL = 86400
 CACHE_STORE = {}
 
 
 class Cache:
-
     data_value_key = "value"
 
     @classmethod
@@ -47,7 +45,7 @@ class Cache:
     def flush():
         """
         Clears the cache store.
-        
+
         Returns:
             None
         """

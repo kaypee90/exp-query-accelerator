@@ -1,6 +1,7 @@
 import json
 import time
 from cache import Cache
+from validator import validate_payload
 
 from utils.logging import create_logger
 from utils.config import DB_TYPE, CONNECTION_STRING, databases
@@ -24,7 +25,11 @@ async def dispatch(request):
         db = database_type(CONNECTION_STRING)
         request_payload = json.loads(request)
 
-        # TODO: Validate request payload
+        errors = validate_payload(request_payload)
+        if errors:
+            logger.error(f"Invalid payload: {', '.join(errors)}")
+            return ", ".join(errors), None
+
         error, data = await db.query(**request_payload)
 
         if not error and data:
@@ -32,7 +37,7 @@ async def dispatch(request):
             Cache.set(request, data)
 
     end_time = time.time()
-    duration_ms = (end_time - start_time) * 1000  
-    logger.info(f"Dispatching processed in {duration_ms:.2f} milliseconds")  
+    duration_ms = (end_time - start_time) * 1000
+    logger.info(f"Dispatching processed in {duration_ms:.2f} milliseconds")
 
     return error, data
