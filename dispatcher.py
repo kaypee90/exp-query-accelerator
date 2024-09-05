@@ -1,5 +1,6 @@
 import json
 import time
+import asyncio
 from cache import Cache
 from validator import validate_payload
 
@@ -7,6 +8,7 @@ from utils.logging import create_logger
 from utils.config import DB_TYPE, CONNECTION_STRING, databases
 
 logger = create_logger(__name__)
+cache_lock = asyncio.Lock()
 
 
 async def dispatch(request):
@@ -34,7 +36,8 @@ async def dispatch(request):
 
         if not error and data:
             logger.info("Caching request retrieved from db")
-            Cache.set(request, data)
+            async with cache_lock:
+                Cache.set(request, data)
 
     end_time = time.time()
     duration_ms = (end_time - start_time) * 1000
