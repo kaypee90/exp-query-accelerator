@@ -1,4 +1,4 @@
-# Query Accelerator
+# QueryAccelerator
 Experimental Query Accelerator
 
 ### Sample Request Payload
