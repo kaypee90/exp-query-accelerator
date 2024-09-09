@@ -7,6 +7,7 @@ Based on async await
 Handle concurrency
 Monitoring tool eg. Displaying Service health
 Use official db async driver
+Microseconds latency
 
 ==============================================
 """
