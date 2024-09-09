@@ -39,6 +39,7 @@ async def dispatch(request):
             async with cache_lock:
                 Cache.set(request, data)
 
+    # TODO: Achieve microseconds latency
     end_time = time.time()
     duration_ms = (end_time - start_time) * 1000
     logger.info(f"Dispatching processed in {duration_ms:.2f} milliseconds")
