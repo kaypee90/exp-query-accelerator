@@ -5,7 +5,7 @@ from cache import Cache
 from validator import validate_payload
 
 from utils.logging import create_logger
-from utils.config import DB_TYPE, CONNECTION_STRING, databases
+from utils.config import DB_TYPE, databases
 
 logger = create_logger(__name__)
 cache_lock = asyncio.Lock()
@@ -24,9 +24,14 @@ async def dispatch(request):
     if not data:
         logger.info("Couldn't find data in cache, retrieving from db")
         database_type = databases[DB_TYPE]
-        db = database_type(CONNECTION_STRING)
-        request_payload = json.loads(request)
-
+        db_module, connection_string = database_type["module"], database_type["connection_string"]
+        db = db_module(connection_string)
+        try:
+            request_payload = json.loads(request)
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON payload")
+            return "Invalid JSON payload", None
+        
         errors = validate_payload(request_payload)
         if errors:
             logger.error(f"Invalid payload: {', '.join(errors)}")

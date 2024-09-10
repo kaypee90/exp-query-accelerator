@@ -1,6 +1,7 @@
 from db.base import BaseDatabaseWrapper
 import aiosqlite
 import sqlite3
+from db.query_builder import build_sql_query
 
 from utils.logging import create_logger
 
@@ -32,18 +33,4 @@ class Sqlite(BaseDatabaseWrapper):
         """
         Converts request payload to sqlite query
         """
-        assert table, "Table name is required"
-
-        selected_fields = "*"
-        if fields:
-            selected_fields = ", ".join(fields)
-
-        query = f"SELECT {selected_fields} FROM {table}"
-
-        if filters:
-            filter_clause = " AND ".join(
-                [f"{key} = '{value}'" for key, value in filters.items()]
-            )
-            query += f" WHERE {filter_clause}"
-
-        return query
+        return build_sql_query(table, fields, filters)
