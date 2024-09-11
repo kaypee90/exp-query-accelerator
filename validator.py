@@ -1,6 +1,6 @@
 def validate_payload(payload):
     """
-    validates request to payload to match request schema
+    Validates request to payload to match request schema
     """
     errors = []
     if not payload.get("table"):

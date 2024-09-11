@@ -15,7 +15,7 @@ def get_pg_conn_str():
     port={os.getenv('POSTGRES_PORT')}
     """
 
-DB_TYPE = "postgres"
+DB_TYPE = os.getenv("DB_TYPE", "sqlite")
 
 databases = {
     "sqlite": {"module": sqlite.Sqlite, "connection_string": os.getenv('SQLITE_DB')},
