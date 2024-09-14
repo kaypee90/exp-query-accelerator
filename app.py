@@ -15,8 +15,6 @@ Microseconds latency
 import uvicorn
 from handlers import handle_invalid_request, handle_post, handle_get
 
-# TODO: Handle KeyboardInterrupt error
-
 async def app(scope, receive, send):
     assert scope["type"] == "http"
 
@@ -29,4 +27,8 @@ async def app(scope, receive, send):
 
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", port=8000, log_level="info")
+    try:
+        uvicorn.run("app:app", port=8000, log_level="info")
+    except KeyboardInterrupt:
+        print("Shut down in progress")
+        
