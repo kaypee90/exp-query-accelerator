@@ -30,5 +30,5 @@ if __name__ == "__main__":
     try:
         uvicorn.run("app:app", port=8000, log_level="info")
     except KeyboardInterrupt:
-        print("Shut down in progress")
-        
+        print("Shut down in progress...")
+
