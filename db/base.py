@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from collections.abc import Coroutine
 
 
 class BaseDatabaseWrapper(ABC):
@@ -6,5 +7,5 @@ class BaseDatabaseWrapper(ABC):
         self.connection_string = connection_string
 
     @abstractmethod
-    def query(self, **kwargs):
+    def query(self, **kwargs) -> Coroutine:
         pass
