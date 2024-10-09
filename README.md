@@ -1,7 +1,9 @@
 # QueryAccelerator
+
 Experimental Query Accelerator
 
 ### Sample Request Payload
+
 ```
-'{"table":"products", "fields": ["name", "expiry_date"], "filters": {"name": "Bread"}}'
+'{"table":"products", "fields": ["name", "expiry_date"], "filters": [{"field":"name", "operator": "=", "value": "Bread"}, {"field":"name", "operator": "=", "value": "Bread", "bind": "|"} ]'
 ```

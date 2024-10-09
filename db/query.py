@@ -1,21 +1,24 @@
-class Query:
-    def __init__(self, table):
-        self.table = table
+AND = "&"
+OR = "|"
 
 
 class Filter:
-    def __init__(self, field, value, operator="="):
+    def __init__(self, field, value, operator="=", bind="&"):
         self.field = field
         self.value = value
         self.operator = operator
+        self.bind = bind
 
         if not self.field:
             raise ValueError("Field is required")
 
+        if self.bind not in [AND, OR]:
+            raise ValueError("Invalid bind value")
 
-class SelectQuery(Query):
+
+class SelectQuery:
     def __init__(self, table, fields):
-        super().__init__(table)
+        self.table = table
         self._fields = fields
         self._validate_fields()
         self._query = self._select_query()

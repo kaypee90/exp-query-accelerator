@@ -24,14 +24,20 @@ async def dispatch(request):
     if not data:
         logger.info("Couldn't find data in cache, retrieving from db")
         database_type = databases[DB_TYPE]
-        db_module, connection_string = database_type["module"], database_type["connection_string"]
+
+        logger.info(f"Connecting to {database_type['module']}")
+
+        db_module, connection_string = (
+            database_type["module"],
+            database_type["connection_string"],
+        )
         db = db_module(connection_string)
         try:
             request_payload = json.loads(request)
         except json.JSONDecodeError:
             logger.error("Invalid JSON payload")
             return "Invalid JSON payload", None
-        
+
         errors = validate_payload(request_payload)
         if errors:
             logger.error(f"Invalid payload: {', '.join(errors)}")
@@ -44,7 +50,6 @@ async def dispatch(request):
             async with cache_lock:
                 Cache.set(request, data)
 
-    # TODO: Achieve microseconds latency
     end_time = time.time()
     duration_ms = (end_time - start_time) * 1000
     logger.info(f"Dispatching processed in {duration_ms:.2f} milliseconds")

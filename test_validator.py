@@ -21,11 +21,13 @@ def test_validate_payload_with_fields_with_list_containing_all_strings():
     assert len(errors) == 0
 
 
-def test_validate_payload_with_filters_not_dict():
+def test_validate_payload_with_filters_not_list():
     errors = validate_payload({"table": "test", "filters": "test"})
-    assert errors[0] == "`filters` must be a dict"
+    assert errors[0] == "`filters` must be a list"
 
 
-def test_validate_payload_with_filters_must_have_string_keys():
-    errors = validate_payload({"table": "test", "filters": {1: "test"}})
+def test_validate_payload_with_filters_must_have_field_value_as_string():
+    errors = validate_payload(
+        {"table": "test", "filters": [{"field": 1, "value": "test", "operator": "="}]}
+    )
     assert errors[0] == "`filters` keys must be strings"
