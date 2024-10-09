@@ -9,6 +9,9 @@ class Filter:
         self.value = value
         self.operator = operator
 
+        if not self.field:
+            raise ValueError("Field is required")
+
 
 class SelectQuery(Query):
     def __init__(self, table, fields):
@@ -38,9 +41,6 @@ class SelectQuery(Query):
     def _validate_filter(self, filter):
         if not isinstance(filter, Filter):
             raise TypeError("Filter must be a Filter object")
-
-        if not filter.field:
-            raise ValueError("Field is required")
 
     def _get_filter_value(self, filter):
         return f"'{filter.value}'" if isinstance(filter.value, str) else filter.value
