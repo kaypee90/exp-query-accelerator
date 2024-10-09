@@ -1,26 +1,24 @@
+from db.query import SelectQuery, Filter
+
+
 def build_sql_query(table, fields=None, filters=None):
-        """
-        Converts request payload to sql query
-        """
-        assert table, "Table name is required"
+    """
+    Converts request payload to sql query
+    """
+    assert table, "Table name is required"
 
-        ALL_FIELDS = "*"
-        SELECT = "SELECT"
-        FROM = "FROM"
-        AND = "AND"
-        WHERE = "WHERE"
+    ALL_FIELDS = "*"
 
-        if fields:
-            selected_fields = ", ".join(fields)
-        else:
-            selected_fields = ALL_FIELDS
+    selected_fields = fields or ALL_FIELDS
+    query = SelectQuery(table, selected_fields)
+    if filters:
+        query_filter = [Filter(key, value) for key, value in filters.items()]
+        query.filter(query_filter[0])
 
-        query = f"{SELECT} {selected_fields} {FROM} {table}"
+        # Fix this to support OR too
+        if len(query_filter) > 1:
+            for filter in query_filter[1:]:
+                query.and_filter(filter)
 
-        if filters:
-            filter_clause = f" {AND} ".join(
-                [f"{key} = '{value}'" for key, value in filters.items()]
-            )
-            query += f" {WHERE} {filter_clause}"
+    return query.query
 
-        return query
