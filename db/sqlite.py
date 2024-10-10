@@ -29,8 +29,16 @@ class Sqlite(BaseDatabaseWrapper):
             logger.error(error)
             return error, None
 
-    def _generate_query(self, table, fields=None, filters=None):
+    def _generate_query(
+        self, table, fields=None, filters=None, order_by=None, order_dir=None
+    ):
         """
         Converts request payload to sqlite query
         """
-        return build_sql_query(table, fields, filters)
+        return build_sql_query(
+            table,
+            fields=fields,
+            filters=filters,
+            order_by=order_by,
+            order_dir=order_dir,
+        )

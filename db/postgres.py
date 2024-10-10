@@ -22,21 +22,31 @@ class Postgres(BaseDatabaseWrapper):
         try:
             query = self._generate_query(**kwargs)
             # Create an asynchronous connection pool
-            async with AsyncConnectionPool(self.connection_string, min_size=1, max_size=4) as pool:
+            async with AsyncConnectionPool(
+                self.connection_string, min_size=1, max_size=4
+            ) as pool:
                 async with pool.connection() as connection:
                     async with connection.cursor() as cursor:
                         await cursor.execute(query)
                         rows = await cursor.fetchall()
-                        
+
                         return None, rows
         except (TypeError, UndefinedTable, UndefinedColumn) as e:
             error = f"Error: {e}"
             logger.error(error)
             return error, None
 
-
-    def _generate_query(self, table, fields=None, filters=None):
+    def _generate_query(
+        self, table, fields=None, filters=None, order_by=None, order_dir=None
+    ):
         """
         Converts request payload to postgres query
         """
-        return build_sql_query(table, fields, filters)
+        return build_sql_query(
+            table,
+            fields=fields,
+            filters=filters,
+            order_by=order_by,
+            order_dir=order_dir,
+        )
+

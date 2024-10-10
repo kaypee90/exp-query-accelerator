@@ -51,3 +51,35 @@ async def test_dispatch_db_and_cached_data_should_be_same(setup_database):
 
     assert error_2 is None
     assert data_2 == results
+
+
+@pytest.mark.asyncio
+async def test_dispatch_db_should_be_ordered_by_id(setup_database):
+    cursor = setup_database.cursor()
+
+    # Query the database
+    cursor.execute("SELECT * FROM users")
+    results = cursor.fetchall()
+
+    assert len(results) == 2
+
+    payload = json.dumps(
+        {
+            "table": "users",
+            "fields": ["id", "name", "age"],
+            "order_by": "id",
+            "order_dir": "desc",
+        }
+    )
+
+    error, data = await dispatch(payload)
+
+    assert error is None
+
+    assert data is not None
+    assert data[0] is not None
+    assert data[1] is not None
+
+    assert data[0][1] == "Jane Smith"
+    assert data[0][0] == 2
+    assert data[1][1] == "John Doe"

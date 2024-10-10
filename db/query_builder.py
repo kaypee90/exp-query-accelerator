@@ -1,7 +1,7 @@
 from db.query import SelectQuery, Filter, AND, OR
 
 
-def build_sql_query(table, fields=None, filters=None):
+def build_sql_query(table, *, fields=None, filters=None, order_by=None, order_dir=None):
     """
     Converts request payload to sql query
     """
@@ -28,6 +28,12 @@ def build_sql_query(table, fields=None, filters=None):
                     query.or_filter(filter)
                 else:
                     query.and_filter(filter)
+
+    if order_by:
+        if order_dir and order_dir.lower() == "desc":
+            query.order_by_desc(order_by)
+        else:
+            query.order_by(order_by)
 
     return query.query
 
