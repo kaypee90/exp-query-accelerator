@@ -1,9 +1,9 @@
 from psycopg.errors import UndefinedColumn, UndefinedTable
 from psycopg_pool import AsyncConnectionPool
-from db.base import BaseDatabaseWrapper
-from db.query_builder import build_sql_query
+from src.db.base import BaseDatabaseWrapper
+from src.db.query_builder import build_sql_query
 
-from utils.logging import create_logger
+from src.utils.logging import create_logger
 
 logger = create_logger(__name__)
 
@@ -49,4 +49,3 @@ class Postgres(BaseDatabaseWrapper):
             order_by=order_by,
             order_dir=order_dir,
         )
-

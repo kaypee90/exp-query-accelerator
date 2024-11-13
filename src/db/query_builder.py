@@ -1,4 +1,4 @@
-from db.query import SelectQuery, Filter, AND, OR
+from src.db.query import SelectQuery, Filter, AND, OR
 
 
 def build_sql_query(table, *, fields=None, filters=None, order_by=None, order_dir=None):
@@ -36,4 +36,3 @@ def build_sql_query(table, *, fields=None, filters=None, order_by=None, order_di
             query.order_by(order_by)
 
     return query.query
-

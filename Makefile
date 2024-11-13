@@ -1,5 +1,5 @@
 run:
-	uvicorn app:app --reload
+	uvicorn src.app:app --reload
 
 test:
 	pytest . --ignore=test_dispatcher_with_postgres.py 

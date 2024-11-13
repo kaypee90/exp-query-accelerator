@@ -1,7 +1,7 @@
 import pytest
 import json
 import sqlite3
-from dispatcher import dispatch
+from src.dispatcher import dispatch
 
 
 @pytest.fixture

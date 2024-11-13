@@ -1,7 +1,7 @@
 import json
 import pytest
 import psycopg2
-from dispatcher import dispatch
+from src.dispatcher import dispatch
 
 
 # Define a fixture for database setup and teardown

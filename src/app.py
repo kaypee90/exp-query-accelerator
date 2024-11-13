@@ -13,7 +13,8 @@ Microseconds latency
 """
 
 import uvicorn
-from handlers import handle_invalid_request, handle_post, handle_get
+from src.handlers import handle_invalid_request, handle_post, handle_get
+
 
 async def app(scope, receive, send):
     assert scope["type"] == "http"
@@ -31,4 +32,3 @@ if __name__ == "__main__":
         uvicorn.run("app:app", port=8000, log_level="info")
     except KeyboardInterrupt:
         print("Shut down in progress...")
-
