@@ -2,7 +2,7 @@ run:
 	uvicorn src.app:app --reload
 
 test:
-	pytest . --ignore=test_dispatcher_with_postgres.py 
+	pytest tests --ignore=tests/test_dispatcher_with_postgres.py 
 
 test_pg_e2e:
 	./run_postgres_e2e.sh
