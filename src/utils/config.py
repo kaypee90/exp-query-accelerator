@@ -1,10 +1,11 @@
 import os
 from dotenv import load_dotenv
 
-from db import sqlite
-from db import postgres
+from src.db import sqlite
+from src.db import postgres
 
 load_dotenv()
+
 
 def get_pg_conn_str():
     return f"""
@@ -15,10 +16,10 @@ def get_pg_conn_str():
     port={os.getenv('POSTGRES_PORT')}
     """
 
+
 DB_TYPE = os.getenv("DB_TYPE", "sqlite")
 
 databases = {
-    "sqlite": {"module": sqlite.Sqlite, "connection_string": os.getenv('SQLITE_DB')},
-    "postgres": {"module": postgres.Postgres, "connection_string": get_pg_conn_str()}
+    "sqlite": {"module": sqlite.Sqlite, "connection_string": os.getenv("SQLITE_DB")},
+    "postgres": {"module": postgres.Postgres, "connection_string": get_pg_conn_str()},
 }
-

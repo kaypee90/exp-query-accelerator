@@ -1,8 +1,8 @@
 import json
-from http_code import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from dispatcher import dispatch
+from src.http_code import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from src.dispatcher import dispatch
 
-from utils.logging import create_logger
+from src.utils.logging import create_logger
 
 logger = create_logger(__name__)
 

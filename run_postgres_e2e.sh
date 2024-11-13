@@ -44,7 +44,7 @@ echo "PostgreSQL is ready."
 # Step 3: Run E2E tests (replace this with your actual test command)
 echo "Running end-to-end tests..."
 
-pytest test_dispatcher_with_postgres.py
+pytest tests/test_dispatcher_with_postgres.py
 
 echo "Tests finished."
 

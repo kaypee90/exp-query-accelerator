@@ -1,4 +1,4 @@
-from cache import Cache
+from src.cache import Cache
 
 
 class TestCache:

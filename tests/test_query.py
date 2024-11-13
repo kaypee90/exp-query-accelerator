@@ -1,5 +1,5 @@
 import pytest
-from db.query import SelectQuery, Filter
+from src.db.query import SelectQuery, Filter
 
 
 class TestSelectQuery:
