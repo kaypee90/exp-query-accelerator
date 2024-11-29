@@ -1,11 +1,11 @@
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: /
-  schedule:
-    interval: weekly
-  reviewers:
-  - kaypee90
-  open-pull-requests-limit: 5
-  labels:
-  - Pip
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    reviewers:
+      - kaypee90
+    open-pull-requests-limit: 5
+    labels:
+      - pip
