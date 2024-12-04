@@ -28,6 +28,12 @@ jobs:
         run: black --check .
       - name: Test with pytest
         run: |
-          make test
+          make test_all
         env:
           SQLITE_DB: test_db
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_PORT: 5432
+          POSTGRES_HOST: localhost
+          DB_TYPE: postgres
