@@ -29,3 +29,5 @@ jobs:
       - name: Test with pytest
         run: |
           make test
+        env:
+          SQLITE_DB: test_db
