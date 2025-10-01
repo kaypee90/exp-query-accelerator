@@ -2,7 +2,7 @@ uvicorn[standard]==0.37.0
 aiosqlite==0.21.0
 pytest-asyncio==1.2.0
 pytest==8.4.2
-psycopg==3.2.9
+psycopg==3.2.10
 psycopg-binary==3.2.9
 psycopg2-binary==2.9.10
 psycopg-pool==3.2.6
