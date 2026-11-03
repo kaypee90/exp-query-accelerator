@@ -12,6 +12,9 @@ def create_logger(module_name):
         logging.Logger: Logger object configured with a stream handler and a file handler.
     """
     logger = logging.getLogger(module_name)
+    if logger.handlers:
+        # Already configured; adding handlers again would duplicate every line.
+        return logger
     logger.setLevel(logging.INFO)
 
     console_handler = logging.StreamHandler()

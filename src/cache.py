@@ -1,35 +1,41 @@
 """
-In-Memory key-value pair cache
+In-memory key-value cache with per-entry TTL and LRU eviction.
 """
 
-from datetime import datetime, timedelta
-
+import time
+from collections import OrderedDict
 
 TTL = 86400
-CACHE_STORE = {}
+MAX_ENTRIES = 10_000
+CACHE_STORE = OrderedDict()
 
 
 class Cache:
-    data_value_key = "value"
+    max_entries = MAX_ENTRIES
 
     @classmethod
     def set(cls, key, value, ttl=None):
         """
-        Persists data to the cache store.
+        Persists data to the cache store, evicting the least recently used
+        entry when the store is full.
 
         Args:
             key (bytes or str): The key for the cache.
-            value (int or float): The first number.
-            ttl (int): The time to live in seconds. Defaults to 86400 (1 day).
+            value (Any): The value to cache.
+            ttl (int | float | None): Time to live in seconds. Defaults to TTL (1 day).
 
         Returns:
             None
         """
-        enriched_data = cls.__format_data(value, ttl)
-        CACHE_STORE[key] = enriched_data
+        if ttl is None:
+            ttl = TTL
+        CACHE_STORE[key] = (time.monotonic() + ttl, value)
+        CACHE_STORE.move_to_end(key)
+        while len(CACHE_STORE) > cls.max_entries:
+            CACHE_STORE.popitem(last=False)
 
-    @classmethod
-    def get(cls, key):
+    @staticmethod
+    def get(key):
         """
         Retrieves data from the cache store.
 
@@ -37,9 +43,19 @@ class Cache:
             key (bytes or str): The key for the cache.
 
         Returns:
-            list or dict: The data stored in the cache.
+            The cached value, or None if the key is missing or expired.
         """
-        return cls.__get(key)
+        entry = CACHE_STORE.get(key)
+        if entry is None:
+            return None
+
+        expiry, value = entry
+        if expiry <= time.monotonic():
+            del CACHE_STORE[key]
+            return None
+
+        CACHE_STORE.move_to_end(key)
+        return value
 
     @staticmethod
     def flush():
@@ -50,23 +66,3 @@ class Cache:
             None
         """
         CACHE_STORE.clear()
-
-    @classmethod
-    def __get(cls, key):
-        data = CACHE_STORE.get(key, None)
-        if not data:
-            return
-
-        if data["expiry"] <= datetime.now():
-            del CACHE_STORE[key]
-            return
-
-        return data.get(cls.data_value_key)
-
-    @classmethod
-    def __format_data(cls, value, ttl=None):
-        if not ttl:
-            ttl = TTL
-        time_delta = timedelta(seconds=ttl)
-        date_of_expiry = datetime.now() + time_delta
-        return {"expiry": date_of_expiry, cls.data_value_key: value}

@@ -1,33 +1,39 @@
-from src.db.query import SelectQuery, Filter, AND, OR
+from src.db.query import ALL_FIELDS, AND, OR, Filter, SelectQuery
 
 
-def build_sql_query(table, *, fields=None, filters=None, order_by=None, order_dir=None):
+def build_sql_query(
+    table,
+    *,
+    fields=None,
+    filters=None,
+    order_by=None,
+    order_dir=None,
+    placeholder="?",
+):
     """
-    Converts request payload to sql query
+    Converts a request payload to a parameterized SQL query.
+
+    Returns:
+        tuple[str, tuple]: The SQL text and the values to bind to it.
     """
-    assert table, "Table name is required"
-    ALL_FIELDS = "*"
+    if not table:
+        raise ValueError("Table name is required")
 
-    selected_fields = fields or ALL_FIELDS
-    query = SelectQuery(table, selected_fields)
-    if filters:
-        query_filter = [
-            Filter(
-                filter["field"],
-                filter["value"],
-                filter["operator"],
-                filter.get("bind", AND),
-            )
-            for filter in filters
-        ]
-        query.filter(query_filter[0])
+    query = SelectQuery(table, fields or ALL_FIELDS, placeholder=placeholder)
 
-        if len(query_filter) > 1:
-            for filter in query_filter[1:]:
-                if filter.bind == OR:
-                    query.or_filter(filter)
-                else:
-                    query.and_filter(filter)
+    for index, item in enumerate(filters or []):
+        query_filter = Filter(
+            item["field"],
+            item["value"],
+            item["operator"],
+            item.get("bind", AND),
+        )
+        if index == 0:
+            query.filter(query_filter)
+        elif query_filter.bind == OR:
+            query.or_filter(query_filter)
+        else:
+            query.and_filter(query_filter)
 
     if order_by:
         if order_dir and order_dir.lower() == "desc":
@@ -35,4 +41,4 @@ def build_sql_query(table, *, fields=None, filters=None, order_by=None, order_di
         else:
             query.order_by(order_by)
 
-    return query.query
+    return query.query, query.params
