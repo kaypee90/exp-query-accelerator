@@ -13,22 +13,33 @@ Microseconds latency
 """
 
 import uvicorn
-from src.handlers import handle_invalid_request, handle_post, handle_get
+
+from src.handlers import (
+    handle_get,
+    handle_lifespan,
+    handle_method_not_allowed,
+    handle_post,
+)
 
 
 async def app(scope, receive, send):
-    assert scope["type"] == "http"
+    if scope["type"] == "lifespan":
+        await handle_lifespan(receive, send)
+        return
+
+    if scope["type"] != "http":
+        return
 
     if scope["method"] == "POST":
         await handle_post(send, receive)
     elif scope["method"] == "GET":
         await handle_get(send)
     else:
-        await handle_invalid_request(send, "Request must be a POST")
+        await handle_method_not_allowed(send)
 
 
 if __name__ == "__main__":
     try:
-        uvicorn.run("app:app", port=8000, log_level="info")
+        uvicorn.run("src.app:app", port=8000, log_level="info")
     except KeyboardInterrupt:
         print("Shut down in progress...")
